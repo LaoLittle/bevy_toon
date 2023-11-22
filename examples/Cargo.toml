@@ -1,0 +1,22 @@
+[package]
+name = "examples"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[dev-dependencies.bevy]
+version = "0.12"
+
+[dev-dependencies.bevy_toon]
+path = "../bevy_toon"
+
+[dev-dependencies.bevy_toon_outline]
+path = "../bevy_toon_outline"
+
+[[example]]
+name = "uvsphere"
+path = "uvsphere.rs"
+
+[[example]]
+name = "shapes"
+path = "shapes.rs"

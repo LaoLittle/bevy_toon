@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = [
+    "bevy_toon_outline",
+    "bevy_toon",
+
+    # Internal
+    "examples"
+]
+
+[profile.dev]
+opt-level = 1
