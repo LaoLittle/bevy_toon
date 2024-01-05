@@ -8,5 +8,23 @@ members = [
     "examples"
 ]
 
+[workspace.dependencies]
+bitfield = "0.14"
+interpolation = "0.3"
+thiserror = "1.0"
+
+[workspace.dependencies.bevy]
+version = "0.12"
+default-features = false
+features = [
+    "bevy_asset",
+    "bevy_render",
+    "bevy_pbr",
+    "ktx2", 
+    "tonemapping_luts", 
+    "zstd",
+    "bevy_core_pipeline",
+]
+
 [profile.dev]
 opt-level = 1

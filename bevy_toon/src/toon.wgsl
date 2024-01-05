@@ -34,38 +34,45 @@ fn toon_from_vertex_output(vertex: VertexOutput) -> ToonInput {
     );
 }
 
-fn direct_light(in: ToonInput) -> f32 {
+struct LightOutput {
+    intensity: f32,
+    rim_color: vec3<f32>,
+};
+
+fn direct_light(in: ToonInput) -> LightOutput {
     let n_directional_lights = view_bindings::lights.n_directional_lights;
 
     var intensity = 0.0;
+    var rim_color = vec3(0.0);
     for (var i: u32 = 0u; i < n_directional_lights; i = i + 1u) {
         let light = &view_bindings::lights.directional_lights[i];
         let L = (*light).direction_to_light;
         let N = in.N;
 
         intensity += saturate(dot(N, L));
+        rim_color += rim_light(in, L, intensity > Threshold);
     }
 
     let smoothness = saturate(toon.smoothness) * 0.5;
     intensity = smoothstep(Threshold - smoothness, Threshold + smoothness, intensity);
     intensity = max(0.2, intensity);
 
-    return intensity;
+    return LightOutput(intensity, rim_color);
 }
 
-fn rim_light(in: ToonInput, light: bool) -> vec3<f32> {
+fn rim_light(in: ToonInput, L: vec3<f32>, light: bool) -> vec3<f32> {
     if (toon.rim_light_visible == 1u && !light) {
         return vec3(0.0);
     }
 
     let VoN = dot(in.V, in.N);
-    var rim_alpha = 1.0 - max(0.0, VoN);
+    var rim = 1.0 - max(0.0, VoN);
+    rim = pow(rim, 5.0);
 
-    if (rim_alpha < 0.6) {
-        rim_alpha = 0.0;
-    }
+    let NoL = saturate(dot(in.N, L));
+    rim *= pow(NoL, 5.0);
 
-    return toon.rim_color.rgb * rim_alpha * toon.rim_color.a;
+    return toon.rim_color.rgb * rim * toon.rim_color.a;
 }
 
 @fragment
@@ -73,12 +80,8 @@ fn fragment(in: VertexOutput) -> FragmentOutput {
     let toon_in = toon_from_vertex_output(in);
 
     var color = toon.base_color;
-    
-    let intensity = direct_light(toon_in);
-    
-    let rim = rim_light(toon_in, intensity > Threshold);
+    let light = direct_light(toon_in);
+    color = vec4(color.rgb + light.rim_color.rgb, color.a);
 
-    color = vec4(color.rgb + rim.rgb, color.a);
-
-    return FragmentOutput(color * intensity);
+    return FragmentOutput(color * light.intensity);
 }

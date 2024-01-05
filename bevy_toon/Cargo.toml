@@ -9,21 +9,8 @@ homepage = "https://github.com/LaoLittle/bevy_toon/"
 repository = "https://github.com/LaoLittle/bevy_toon/"
 keywords = ["bevy", "toon"]
 
-[dependencies.bevy]
-version = "0.12"
-default-features = false
-features = [
-    "bevy_asset",
-    "bevy_render",
-    "bevy_pbr",
-    "ktx2", 
-    "tonemapping_luts", 
-    "zstd",
-    "bevy_core_pipeline",
-]
+[dependencies]
+bevy.workspace = true
 
 [dependencies.bevy_toon_outline]
 path = "../bevy_toon_outline"
-
-[dev-dependencies.bevy]
-version = "0.12"

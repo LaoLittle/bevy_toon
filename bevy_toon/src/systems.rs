@@ -18,9 +18,10 @@ pub fn set_outline(
             continue;
         };
 
-        commands
-            .get_entity(entity)
-            .unwrap()
-            .insert(outline.into_bundle());
+        let Some(mut ec) = commands.get_entity(entity) else {
+            continue;
+        };
+
+        ec.insert(outline.into_bundle());
     }
 }

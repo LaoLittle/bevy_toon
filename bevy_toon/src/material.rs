@@ -17,6 +17,8 @@ pub struct ToonMaterial {
     pub smoothness: f32,
     pub outline: Option<OutlineSetting>,
     pub rim_light: Option<RimLightSetting>,
+
+    pub alpha_mode: AlphaMode,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -71,5 +73,9 @@ impl AsBindGroupShaderType<ToonMaterialUniform> for ToonMaterial {
 impl Material for ToonMaterial {
     fn fragment_shader() -> ShaderRef {
         TOON_SHADER_HANDLE.into()
+    }
+
+    fn alpha_mode(&self) -> AlphaMode {
+        self.alpha_mode
     }
 }

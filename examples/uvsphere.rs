@@ -64,7 +64,7 @@ pub fn setup(
 
     let ball = meshes.add(shape::UVSphere::default().into());
 
-    commands.spawn(MaterialMeshBundle {
+    commands.spawn(ToonBundle {
         material: mine,
         mesh: ball,
         ..default()
